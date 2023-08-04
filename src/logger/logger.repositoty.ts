@@ -14,6 +14,8 @@ export class LoggerRepository implements ILoggerRepository {
     entries: string,
     message: string,
     context?: string,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    callback?: Function,
   ): Promise<string> {
     return new Promise((resolve, _) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -30,10 +32,10 @@ export class LoggerRepository implements ILoggerRepository {
         .create(entities)
         .save()
         .then((data) => {
-          resolve(JSON.stringify(data));
+          resolve(callback ? callback(JSON.stringify(data)) : '');
         })
         .catch((error) => {
-          resolve(JSON.stringify(error));
+          resolve(callback ? callback(JSON.stringify(error)) : '');
         });
     });
   }
@@ -43,6 +45,8 @@ export class LoggerRepository implements ILoggerRepository {
     message: string,
     trace?: string,
     context?: string,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    callback?: Function,
   ): Promise<string> {
     return new Promise((resolve, _) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -59,10 +63,10 @@ export class LoggerRepository implements ILoggerRepository {
         .create(entities)
         .save()
         .then((data) => {
-          resolve(JSON.stringify(data));
+          resolve(callback ? callback(JSON.stringify(data)) : '');
         })
         .catch((error) => {
-          resolve(JSON.stringify(error));
+          resolve(callback ? callback(JSON.stringify(error)) : '');
         });
     });
   }
