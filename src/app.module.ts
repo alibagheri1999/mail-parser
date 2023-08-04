@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { configValidationSchema } from './schema/env.validator';
 import { DatabaseModule } from './db/postgress.module';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerService } from './logger/logger.service';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { DatabaseModule } from './db/postgress.module';
       limit: 10000,
     }),
     DatabaseModule,
+    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [AppService, ConfigService, LoggerService],
 })
 export class AppModule {}
