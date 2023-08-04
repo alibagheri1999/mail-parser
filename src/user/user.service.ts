@@ -24,7 +24,9 @@ export class UserService {
         typeof error === 'string' ? error : error?.message?.toString(),
         error?.toString(),
       );
-      return typeof error === 'string' ? JSON.parse(error).message : error.message;
+      return typeof error === 'string'
+        ? JSON.parse(error).message
+        : error.message;
     }
   }
   async get(): Promise<UserEntity[] | string> {
@@ -37,7 +39,9 @@ export class UserService {
         typeof error === 'string' ? error : error?.message?.toString(),
         error?.toString(),
       );
-      return typeof error === 'string' ? JSON.parse(error).message : error.message;
+      return typeof error === 'string'
+        ? JSON.parse(error).message
+        : error.message;
     }
   }
 }

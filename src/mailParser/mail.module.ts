@@ -7,13 +7,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../user/entity/User.entity';
 import { UserModule } from '../user/user.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { LoggerModule } from '../logger/logger.module';
+import LoggerEntity from '../logger/entity/logger.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, LoggerEntity]),
     UserModule,
     ScheduleModule.forRoot(),
+    LoggerModule,
   ],
   providers: [MailService, LoggerService, UserService],
   exports: [MailService],

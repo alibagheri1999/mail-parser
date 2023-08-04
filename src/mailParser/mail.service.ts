@@ -27,7 +27,7 @@ export class MailService implements IMailParser {
       const searchCriteria = ['UNSEEN'];
       const fetchOptions = {
         bodies: ['HEADER', 'TEXT'],
-        markSeen: false,
+        markSeen: true,
       };
       const results: MailReaderType[] = await this.connection.search(
         searchCriteria,
@@ -35,6 +35,7 @@ export class MailService implements IMailParser {
       );
       await this.handleData(results);
     } catch (error) {
+      console.log(error);
       this.loggerService.error(
         'initiating cron job',
         error?.message?.toString(),
