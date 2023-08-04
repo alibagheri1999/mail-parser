@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { configValidationSchema } from './schema/env.validator';
+import { DatabaseModule } from './db/postgress.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { configValidationSchema } from './schema/env.validator';
       ttl: 3600 * 12,
       limit: 10000,
     }),
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
