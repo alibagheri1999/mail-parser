@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LoggerService } from './logger.service';
-import { LoggerRepository } from './logger.repositoty';
-import LoggerEntity from './entity/logger.entity';
+import { UserService } from './user.service';
+import { UserRepository } from './user.repositoty';
+import UserEntity from './entity/User.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserController } from './user.controller';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([LoggerEntity])],
-  providers: [LoggerService, LoggerRepository],
-  exports: [LoggerService, LoggerRepository],
+  imports: [ConfigModule, TypeOrmModule.forFeature([UserEntity])],
+  providers: [UserService, UserRepository],
+  exports: [UserService, UserRepository],
+  controllers: [UserController],
 })
-export class LoggerModule {}
+export class UserModule {}

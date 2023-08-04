@@ -17,10 +17,14 @@ class User extends BaseEntity {
   })
   public name: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public phone_no: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public email: string;
 
   @CreateDateColumn()

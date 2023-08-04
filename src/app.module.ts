@@ -7,6 +7,7 @@ import { configValidationSchema } from './schema/env.validator';
 import { DatabaseModule } from './db/postgress.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerService } from './logger/logger.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LoggerService } from './logger/logger.service';
     }),
     DatabaseModule,
     LoggerModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService, LoggerService],

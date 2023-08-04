@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import LoggerEntity from '../logger/entity/logger.entity';
+import UserEntity from "../user/entity/User.entity";
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import LoggerEntity from '../logger/entity/logger.entity';
         synchronize:
           configService.get<string>('POSTGRES_SYNCHRONIZE') === 'true' || true,
         keepConnectionAlive: true,
-        entities: [LoggerEntity],
+        entities: [LoggerEntity, UserEntity],
       }),
     }),
   ],
