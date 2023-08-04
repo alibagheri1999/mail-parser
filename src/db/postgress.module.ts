@@ -9,13 +9,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('POSTGRES_HOSTNAME') || 'localhost',
-        port: Number.parseInt(configService.get('POSTGRES_PORT')) || 5432,
-        username: configService.get('POSTGRES_USERNAME') || 'alibagheri',
-        password: configService.get('POSTGRES_PASSWORD') || 'Abcd1234',
-        database: configService.get('POSTGRES_NAME') || 'postgres',
+        host: configService.get<string>('POSTGRES_HOSTNAME') || 'localhost',
+        port: configService.get<number>('POSTGRES_PORT'),
+        username:
+          configService.get<string>('POSTGRES_USERNAME') || 'alibagheri',
+        password: configService.get<string>('POSTGRES_PASSWORD') || 'Abcd1234',
+        database: configService.get<string>('POSTGRES_NAME') || 'postgres',
         synchronize:
-          configService.get('POSTGRES_SYNCHRONIZE') === 'true' || true,
+          configService.get<string>('POSTGRES_SYNCHRONIZE') === 'true' || true,
         keepConnectionAlive: true,
         entities: [],
       }),
