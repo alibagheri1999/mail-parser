@@ -5,17 +5,21 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { MailReaderType } from './ports/mail.reader.type';
 import { UserService } from '../user/user.service';
 import { LoggerService } from '../logger/logger.service';
+import { findPatterns } from './utilities/text.macher';
+import { MacherType } from './ports/macher.type';
+import { IMailParser } from './ports/IMailParser';
 
 @Injectable()
-export class MailService {
+export class MailService implements IMailParser {
   constructor(
     private readonly userService: UserService,
     private readonly loggerService: LoggerService,
   ) {}
   connection: any;
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_SECOND)
   async read(): Promise<void> {
     try {
+      console.log(' start cron job');
       await this.connect();
       const box = await this.connection.openBox('INBOX');
       const searchCriteria = ['UNSEEN'];
@@ -47,21 +51,20 @@ export class MailService {
     this.connection = await imaps.connect(READ_MAIL_CONFIG);
     console.log('CONNECTION SUCCESSFUL', new Date().toString());
   }
-  private handleData(results: MailReaderType[]): void {
-    results.forEach((res) => {
+  private async handleData(results: MailReaderType[]): Promise<void> {
+    for (let i = 0; i < results.length; i++) {
+      const res = results[i];
       const text = res.parts.filter((part) => {
         return part.which === 'TEXT';
       });
       const emailHTML = text[0].body;
       const emailText = convert(emailHTML);
-      const user = {
-        name: 'ali',
-        phone_no: '123456789',
-        email: 'test@yepco.ir',
-      };
-      this.userService.create(user);
-      console.log('result', emailText);
-    });
+      await this.recordData(emailText);
+    }
     this.connection.end();
+  }
+  private async recordData(emailText: string): Promise<void> {
+    const user: MacherType = findPatterns(emailText);
+    await this.userService.create(user);
   }
 }
