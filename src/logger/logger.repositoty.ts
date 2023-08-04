@@ -5,31 +5,65 @@ import { ILoggerRepository } from './ports/ILoggerRepository';
 import LoggerEntity from './entity/logger.entity';
 
 @Injectable()
-export class LoggerService implements ILoggerRepository {
-  constructor(@InjectRepository(LoggerEntity) private readonly loggerRepository: Repository<LoggerEntity>) {
-  }
-  public async log(message: any, context?: string): Promise<string> {
-    return new Promise((resolve, reject)=> {
-      resolve('done');
+export class LoggerRepository implements ILoggerRepository {
+  constructor(
+    @InjectRepository(LoggerEntity)
+    private loggerRepository: Repository<LoggerEntity>,
+  ) {}
+  public async logInfo(
+    entries: string,
+    message: string,
+    context?: string,
+  ): Promise<string> {
+    return new Promise((resolve, _) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const entities = {
+        entries,
+        level: 'info',
+        name: 'Success',
+        message,
+        context_name: context,
+        trace: null,
+      } as LoggerEntity;
+      this.loggerRepository
+        .create(entities)
+        .save()
+        .then((data) => {
+          resolve(JSON.stringify(data));
+        })
+        .catch((error) => {
+          resolve(JSON.stringify(error));
+        });
     });
   }
-  public async info(message: any, context?: string): Promise<string> {
-    return new Promise((resolve, reject)=> {
-      resolve('done');
-    });
-  }
-  public async warn(message: any, context?: string): Promise<string> {
-    return new Promise((resolve, reject)=> {
-      resolve('done');
-    });
-  }
-  public async error(
-    message: any,
+
+  async error(
+    entries: string,
+    message: string,
     trace?: string,
     context?: string,
   ): Promise<string> {
-    return new Promise((resolve, reject)=> {
-      resolve('done');
+    return new Promise((resolve, _) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const entities = {
+        entries,
+        level: 'error',
+        name: 'Fail',
+        message,
+        context_name: context,
+        trace: trace ?? null,
+      } as LoggerEntity;
+      this.loggerRepository
+        .create(entities)
+        .save()
+        .then((data) => {
+          resolve(JSON.stringify(data));
+        })
+        .catch((error) => {
+          resolve(JSON.stringify(error));
+        });
     });
   }
 }

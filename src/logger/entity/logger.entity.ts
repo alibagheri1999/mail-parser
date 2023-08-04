@@ -20,12 +20,17 @@ class Logger extends BaseEntity {
   @Column({
     nullable: false,
   })
+  public entries: string;
+
+  @Column({
+    nullable: false,
+  })
   public name: string;
 
   @Column({
     nullable: false,
   })
-  public massage: string;
+  public message: string;
 
   @Column({
     nullable: false,

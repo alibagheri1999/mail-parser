@@ -1,6 +1,9 @@
 export interface ILoggerRepository {
-  log(message: any, context?: string): Promise<string>;
-  info(message: any, context?: string): Promise<string>;
-  warn(message: any, context?: string): Promise<string>;
-  error(message: any, trace?: string, context?: string): Promise<string>;
+  logInfo(entries: string, message: any, context?: string): Promise<string>;
+  error(
+    entries: string,
+    message: any,
+    trace?: string,
+    context?: string,
+  ): Promise<string>;
 }
