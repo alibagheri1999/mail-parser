@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as imaps from 'imap-simple';
 import { convert } from 'html-to-text';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -14,26 +14,32 @@ export class MailService implements IMailParser {
   constructor(
     private readonly userService: UserService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) {
+    this.loggerService.setName(MailService.name);
+  }
   connection: any;
-  @Cron(CronExpression.EVERY_SECOND)
+  @Cron(CronExpression.EVERY_MINUTE)
   async read(): Promise<void> {
     try {
-      console.log(' start cron job');
+      console.log('start cron job');
       await this.connect();
       const box = await this.connection.openBox('INBOX');
       const searchCriteria = ['UNSEEN'];
       const fetchOptions = {
         bodies: ['HEADER', 'TEXT'],
-        markSeen: true,
+        markSeen: false,
       };
       const results: MailReaderType[] = await this.connection.search(
         searchCriteria,
         fetchOptions,
       );
-      this.handleData(results);
+      await this.handleData(results);
     } catch (error) {
-      console.log(error);
+      this.loggerService.error(
+        'initiating cron job',
+        error?.message?.toString(),
+        error?.toString(),
+      );
     }
   }
   private async connect(): Promise<void> {
@@ -43,7 +49,7 @@ export class MailService implements IMailParser {
         password: process.env.MAIL_PASSWORD,
         host: process.env.MAIL_HOST,
         port: 993,
-        authTimeout: 10000,
+        authTimeout: 20000,
         tls: true,
         tlsOptions: { rejectUnauthorized: false },
       },
@@ -65,6 +71,15 @@ export class MailService implements IMailParser {
   }
   private async recordData(emailText: string): Promise<void> {
     const user: MacherType = findPatterns(emailText);
-    await this.userService.create(user);
+    const result = await this.userService.create(user);
+    if (typeof result === 'string' || result instanceof Error) {
+      this.loggerService.error(
+        user,
+        typeof result === 'string' ? result : result?.message?.toString(),
+        result?.toString(),
+      );
+    } else {
+      this.loggerService.logInfo(user, 'user added successfully');
+    }
   }
 }
