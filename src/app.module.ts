@@ -8,6 +8,7 @@ import { DatabaseModule } from './db/postgress.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerService } from './logger/logger.service';
 import { UserModule } from './user/user.module';
+import { MailModule } from "./mailParser/mail.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     LoggerModule,
     UserModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService, LoggerService],
