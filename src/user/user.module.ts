@@ -9,6 +9,7 @@ import { LoggerService } from '../logger/logger.service';
 import { LoggerModule } from '../logger/logger.module';
 import { LoggerRepository } from '../logger/logger.repositoty';
 import LoggerEntity from '../logger/entity/logger.entity';
+import { UserAD } from './user.ad';
 
 @Module({
   imports: [
@@ -16,7 +17,13 @@ import LoggerEntity from '../logger/entity/logger.entity';
     TypeOrmModule.forFeature([UserEntity, LoggerEntity]),
     LoggerModule,
   ],
-  providers: [UserService, UserRepository, LoggerService, LoggerRepository],
+  providers: [
+    UserService,
+    UserRepository,
+    LoggerService,
+    LoggerRepository,
+    UserAD,
+  ],
   exports: [UserService, UserRepository],
   controllers: [UserController],
 })
