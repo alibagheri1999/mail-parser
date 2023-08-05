@@ -5,6 +5,7 @@ import {
   Post,
   HttpException,
   HttpStatus,
+  Inject
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { createUserDTO } from './dto/create.user.dto';
@@ -13,7 +14,9 @@ import { LoggerService } from '../logger/logger.service';
 @Controller('/api/v1/user')
 export class UserController {
   constructor(
+    @Inject(UserService)
     private readonly userService: UserService,
+    @Inject(LoggerService)
     private readonly loggerService: LoggerService,
   ) {
     this.loggerService.setName(UserController.name);

@@ -36,13 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var imap_simple_1 = require("imap-simple");
+var {connect} = require("imap-simple");
 var html_to_text_1 = require("html-to-text");
 var READ_MAIL_CONFIG = {
     imap: {
         user: 'test@yepco.ir',
         password: 'C4<z9Kjc',
-        host: 'C4<z9Kjc',
+        host: 'mail.yepco.ir',
         port: 993,
         authTimeout: 10000,
         tls: true,
@@ -61,7 +61,7 @@ function read() {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
                     console.log(1);
-                    return [4 /*yield*/, imap_simple_1["default"].connect(READ_MAIL_CONFIG)];
+                    return [4 /*yield*/, connect(READ_MAIL_CONFIG)];
                 case 1:
                     connection = _a.sent();
                     console.log('CONNECTION SUCCESSFUL', new Date().toString());

@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as imaps from 'imap-simple';
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { connect } from 'imap-simple';
 import { convert } from 'html-to-text';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MailReaderType } from './ports/mail.reader.type';
@@ -12,17 +12,19 @@ import { IMailParser } from './ports/IMailParser';
 @Injectable()
 export class MailService implements IMailParser {
   constructor(
+    @Inject(UserService)
     private readonly userService: UserService,
+    @Inject(LoggerService)
     private readonly loggerService: LoggerService,
   ) {
     this.loggerService.setName(MailService.name);
   }
   connection: any;
-  @Cron(CronExpression.EVERY_MINUTE)
-  async read(): Promise<void> {
+  @Cron(CronExpression.EVERY_SECOND)
+  async read(): Promise<string> {
     try {
-      console.log('start cron job');
-      await this.connect();
+      // console.log('start cron job');
+      await this.connectImap();
       const box = await this.connection.openBox('INBOX');
       const searchCriteria = ['UNSEEN'];
       const fetchOptions = {
@@ -34,8 +36,8 @@ export class MailService implements IMailParser {
         fetchOptions,
       );
       await this.handleData(results);
+      return 'Completed';
     } catch (error) {
-      console.log(error);
       this.loggerService.error(
         'initiating cron job',
         error?.message?.toString(),
@@ -43,7 +45,7 @@ export class MailService implements IMailParser {
       );
     }
   }
-  private async connect(): Promise<void> {
+  private async connectImap(): Promise<void> {
     const READ_MAIL_CONFIG = {
       imap: {
         user: process.env.MAIL_USERNAME,
@@ -55,8 +57,9 @@ export class MailService implements IMailParser {
         tlsOptions: { rejectUnauthorized: false },
       },
     };
-    this.connection = await imaps.connect(READ_MAIL_CONFIG);
-    console.log('CONNECTION SUCCESSFUL', new Date().toString());
+    // console.log('222222222');
+    this.connection = await connect(READ_MAIL_CONFIG);
+    // console.log('CONNECTION SUCCESSFUL', new Date().toString());
   }
   private async handleData(results: MailReaderType[]): Promise<void> {
     for (let i = 0; i < results.length; i++) {

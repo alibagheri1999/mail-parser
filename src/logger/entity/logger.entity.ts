@@ -50,22 +50,3 @@ class Logger extends BaseEntity {
 }
 
 export default Logger;
-/*@PrimaryGeneratedColumn()
-public id: string;
-
-@Column({
-  nullable: false,
-})
-public name: string;
-
-@Column()
-public phone_no: string;
-
-@Column()
-public email: string;
-
-@CreateDateColumn()
-public create_date: Date;
-
-@UpdateDateColumn()
-public last_modified_date: string;*/

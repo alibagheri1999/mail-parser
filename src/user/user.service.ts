@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repositoty';
 import { createUserDTO } from './dto/create.user.dto';
 import UserEntity from './entity/User.entity';
@@ -7,7 +7,9 @@ import { LoggerService } from '../logger/logger.service';
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(UserRepository)
     private userRepository: UserRepository,
+    @Inject(LoggerService)
     private readonly loggerService: LoggerService,
   ) {
     this.loggerService.setName(UserService.name);
